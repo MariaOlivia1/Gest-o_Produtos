@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> 
+    <link rel="stylesheet" href="style.css"> 
+
+</head>
+<body>
+
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Artigos religiosos</span>
+      </div>
+    </nav>
+
+    <div>
+        <h6> Cadastrar Novo Produto</h6>
+        <button type="submit" class="btn btn-secondary" style="margin-left: 105px;" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="modCadastro()">Cadastrar</button> 
+    </div> 
+
+    <div id="pesquisar-action">
+      <h6> Pesquisar Produto </h6>
+      <div class="m-3 d-flex align-items-center ">
+          <label for="search" class="form-label" style="margin-left: 50px; margin-right: 50px;"></label>
+          <input type="search" class="form-control" id="search" onkeyup="buscarProdutos()"> <!--função lá do backend-->
+      </div>
+    </div>
+
+    <div class="listagem">
+      <h6>Lista de Produtos</h6>
+      <table class="table table-striped table-hover table-bordered" style="margin-left: 105px;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Ver detalhes</th>
+            <th>Editar</th>
+            <th>Remover</th>
+          </tr>
+        </thead>
+        <tbody id="produtosLista"> </tbody> <!--parte lá do script (function exibirProdutos())-->
+
+      </table>
+    </div>
+  </div>
+
+    <!-- modal --> 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="cadastroModalLabel">Cadastrar Novo Produto</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="d-flex align-items-center">
+                <label for="inputNome" class="form-label">Nome:</label> <br>
+                <input type="text" class="form-control" id="inputNome"> <br> 
+              </div>
+              <div class="d-flex align-items-center">
+                <label for="inputCategoria" class="form-label">Categoria:</label><br>
+                <input type="text" class="form-control" id="inputCategoria">
+              </div>
+              <div class="d-flex align-items-center">
+                <label for="inputPreco" class="form-label">Preco:</label><br>
+                <input type="text" class="form-control" id="inputPreco">
+              </div>
+              <div class="d-flex align-items-center"> <!--campo de descrição-->
+                <label for="inputDescricao" class="form-label" style="height: 100px">Descricao:</label><br>
+                <input type="text" class="form-control" id="inputDescricao">
+              </div>
+              <div class="d-flex align-items-center"> 
+                <label for="inputImagem" class="form-label">Imagem:</label><br>
+                <input type="text" class="form-control" id="inputImagem"> 
+              </div> 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="cadastrarProduto()">Salvar</button> 
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- modalEditar...-->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editModalLabel">Editar</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex align-items-center">
+              <label for="editNome" class="form-label">Nome:</label>
+              <input type="text" class="form-control" id="editNome">
+            </div>
+            <div class="d-flex align-items-center">
+              <label for="inputCategoria" class="form-label">Categoria:</label>
+              <input type="text" class="form-control" id="editCategoria">
+            </div>
+            <div class="d-flex align-items-center">
+              <label for="inputPreco" class="form-label">Preco:</label>
+              <input type="text" class="form-control" id="editPreco">
+            </div>
+            <div class="d-flex align-items-center"> <!--campo de descrição-->
+              <label for="inputDescricao" class="form-label" style="height: 100px">Descricao:</label>
+              <input type="text" class="form-control" id="editDescricao">
+            </div>
+            <div class="d-flex align-items-center"> <!--campo do upload de imagem-->
+              <label for="inputImagem" class="form-label">Imagem:</label>
+              <input type="text" class="form-control" id="editImagem"> 
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="editar">Editar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modalDetalhes -->
+    <div class="modal" id="modalDetalhar" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Ver detalhes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex align-items-center">
+              <label for="nomeDetalhe" class="form-label">Nome:</label>
+              <input type="text" class="form-control" id="nomeDetalhe" disabled>
+            </div>
+            <div class="d-flex align-items-center">
+              <label for="categoriaDetalhe" class="form-label">Categoria:</label>
+              <input type="text" class="form-control" id="categoriaDetalhe" disabled>
+            </div>
+            <div class="d-flex align-items-center">
+              <label for="precoDetalhe" class="form-label">Preco:</label>
+              <input type="text" class="form-control" id="precoDetalhe" disabled>
+            </div>
+            <div class="d-flex align-items-center"> 
+              <label for="descricaoDetalhe" class="form-label">Descricao:</label>
+              <input type="text" class="form-control" id="descricaoDetalhe" disabled>
+            </div>
+            <div class="d-flex align-items-center"> 
+              <label for="imagemDetalhe" class="form-label">Imagem:</label>
+              <input type="text" class="form-control" id="imagemDetalhe" disabled> 
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal remover-->
+    <div id="modalRemover" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <h4> Tem certeza que deseja remover este produto da lista?</h4>
+                    </div>
+                </div> <!-- /users/20201214010006/products -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="remover">Remover</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+      const baseUrl = "https://649a1d4a79fbe9bcf8404b5a.mockapi.io" 
+      getProdutos();
+
+      function modCadastro(){
+        const m = document.querySelector("#exampleModal")
+        const firstModal = bootstrap.Modal.getInstance(m)
+        firstModal.show()
+      }
+
+      async function cadastrarProduto() {
+        const inputNome = document.querySelector("#inputNome");
+        const inputCategoria = document.querySelector("#inputCategoria");
+        const inputPreco = document.querySelector("#inputPreco");
+        const inputDescricao = document.querySelector("#inputDescricao");
+        const inputImagem = document.querySelector("#inputImagem");
+        const produtos = {
+          nome: inputNome.value,
+          categoria: inputCategoria.value,
+          preco: inputPreco.value,
+          descricao: inputDescricao.value,
+          imagem: inputImagem.value
+        }
+       
+        
+
+        try {
+          await fetch(baseUrl + "/users/20201214010006/products", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(produtos)
+          });
+
+        } catch (error) {
+          alert("Ocorreu um erro")
+          console.log(error)
+        }
+
+        //Limpar os dados
+        inputNome.value = "";
+        inputCategoria.value = "";
+        inputPreco.value = "";
+        inputDescricao.value = "";
+        inputImagem.value = "";
+        //Fechar janela
+        const m = document.querySelector("#exampleModal");
+        const modal = bootstrap.Modal.getInstance(m);
+        modal.hide();
+        exibirProdutos();
+      }
+
+      async function exibirProdutos(lista){
+        const tbody = document.querySelector("#produtosLista");
+
+        let linhas = ""
+        lista.forEach((produtos, index) => {
+          linhas += `<tr>
+              <td>${index + 1}</td>
+              <td>${produtos.nome}</td>
+              <td>${produtos.categoria}</td>
+              <td><i class="bi bi-eye-fill" style="cursor: pointer" onclick="detalharProdutos(${produtos.id})"></i></td>
+              <td><i class="bi bi-pencil-square" style="cursor: pointer" onclick="editarProdutos(${produtos.id})"></i></td>
+              <td><i class="bi bi-x-square-fill" style="cursor: pointer" onclick="removerProdutos(${produtos.id})"></i></td>
+              </tr>`;
+        });
+
+        if (linhas == "") {
+          linhas = `
+            <tr>
+              <td colspan="5" style="text-align:center">Não há dados cadastrados</td>
+            </tr>
+          `;
+        }
+      
+        tbody.innerHTML = linhas;
+      }
+
+      async function detalharProdutos(index){
+        const modalDetalhar = new bootstrap.Modal("#modalDetalhar")
+        modalDetalhar.show()
+        const nomeDet = document.querySelector("#nomeDetalhe")
+        const categoriaDet = document.querySelector("#categoriaDetalhe")
+        const precoDet = document.querySelector("#precoDetalhe")
+        const descricaoDet = document.querySelector("#descricaoDetalhe")
+        const imagemDet = document.querySelector("imagemDetalhe")
+
+        try {
+          const response = await fetch(baseUrl + "/users/20201214010006/products/" + index);
+          const data = await response.json();
+          nomeDet.value = data.nome;
+          categoriaDet.value = data.categoria;
+          precoDet.value = data.preco;
+          descricaoDet.value = data.descricao;
+          imagemDet.value = data.imagem; 
+
+
+        } catch (error) {
+          alert("Ocorreu um erro")
+          console.log(error)
+
+        }
+      }
+
+      async function getProdutos() {
+        try {
+          const response = await fetch(baseUrl + "/users/20201214010006/products");
+          const data = await response.json();
+          exibirProdutos(data);
+
+        } catch (error) {
+          alert("Ocorreu um erro")
+          console.log(error)
+
+        }
+      }
+
+      async function buscarProdutos(){
+        const filtro = document.querySelector("#search")
+
+        try {
+          if (filtro.value == "")
+            getProdutos();
+          else {
+            const response = await fetch(baseUrl + "/users/20201214010006/products/?nome=" + filtro.value);
+            const data = await response.json();
+            exibirProdutos(data);
+          }
+
+        } catch (error) {
+          alert("Ocorreu um erro")
+          console.log(error)
+        }
+
+      }
+
+      async function removerProdutos(index) {
+        const modalRemover = new bootstrap.Modal('#modalRemover');
+        modalRemover.show();
+        const btnRemover = document.querySelector("#remover");
+        btnRemover.addEventListener("click", async () => {
+          try {
+            await fetch(baseUrl + "/users/20201214010006/products/" + index, { method: "DELETE" });
+            modalRemover.hide();
+            exibirProdutos(lista);
+          } catch (error) {
+            alert("Ocorreu um erro")
+            console.log(error)
+          } 
+        });
+      }
+
+      async function editarProdutos(index) {
+        const editNome = document.querySelector("#editNome");
+        const editCategoria = document.querySelector("#editCategoria");
+        const editPreco = document.querySelector("#editPreco");
+        const editDescricao = document.querySelector("#editDescricao");
+        const editImagem = document.querySelector("#editImagem");
+        try {
+          const response = await fetch(baseUrl + "/users/20201214010006/products/" + index);
+          const data = await response.json();
+          editNome.value = data.nome;
+          editCategoria.value = data.categoria;
+          editPreco.value = data.preco;
+          editDescricao.value = data.descricao;
+          editImagem.value = data.imagem;
+        } catch (error) {
+          alert("Ocorreu um erro")
+          console.log(error)
+        }
+
+        const modalEditar = new bootstrap.Modal('#editModal');
+        modalEditar.show();
+        const editar = document.querySelector("#editar");
+        editar.addEventListener("click", async () => {
+          const produto = {
+            nome: editNome.value,
+            categoria: editCategoria.value,
+            preco: editPreco.value,
+            descricao: editDescricao.value,
+            imagem: editImagem.value
+          };
+          try {
+            const response = await fetch(baseUrl + "/users/20201214010029/products/" + index, {
+              method: "PUT",
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(produto)
+            });
+            exibirProdutos();
+            modalEditar.hide();
+          } catch (error) {
+          alert("Ocorreu um erro")
+          console.log(error)
+          }
+
+      })
+    }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+
+</body>
+</html>
